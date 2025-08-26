@@ -9,34 +9,24 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en'>
-      <body className='bg-gray-100 text-gray-900 flex flex-col min-h-screen'>
+      <body className='min-h-screen text-gray-900 bg-gray-100'>
         {/* Header */}
-        <header className='bg-white shadow-md'>
-          <nav className='container mx-auto flex justify-between items-center py-4 px-6'>
-            <Link href='/' className='text-2xl font-bold text-blue-600'>
-              3JS Demos
+        <header className='absolute top-0 left-0 right-0 z-10 bg-transparent shadow-md'>
+          <nav className='container px-6 py-4 mx-auto'>
+            <Link href='/' className='ml-10 text-lg font-bold text-blue-900 sm:text-2xl'>
+              3JS Demo
             </Link>
-            <div className='space-x-4'>
-              <Link href='/' className='hover:text-blue-600'>
-                Home
-              </Link>
-              <Link href='/about' className='hover:text-blue-600'>
-                About
-              </Link>
-              <Link href='/contact' className='hover:text-blue-600'>
-                Contact
-              </Link>
-            </div>
+            <div className='space-x-4'></div>
           </nav>
         </header>
 
         {/* Main Content */}
-        <main className='flex-1 container mx-auto px-6 py-8'>{children}</main>
+        <main className='flex-1 w-screen'>{children}</main>
 
         {/* Footer */}
-        <footer className='bg-gray-900 text-gray-300 py-6 mt-12'>
+        <footer className='py-6 text-gray-300 bg-gray-900'>
           <div className='container mx-auto text-center'>
-            <p>© {new Date().getFullYear()} 3JS Demo Site. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} 3JS Demo Site. Created by Sarath Surendran</p>
           </div>
         </footer>
       </body>

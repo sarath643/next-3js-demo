@@ -1,9 +1,10 @@
-import DemoCube from '@/components/DemoCube';
 import LamboCanvas from '@/components/Lambo/LamboCanvas';
+import { HeroGeometric } from '@/components/shadcn/Title';
 
 export default function Home() {
   return (
-    <div className='space-y-12'>
+    <div className=''>
+      <HeroGeometric />
       <LamboCanvas />
     </div>
   );

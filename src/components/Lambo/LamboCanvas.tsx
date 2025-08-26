@@ -6,6 +6,8 @@ import { Lamborghini } from './Lamborghini';
 import { Effects } from './Effects';
 import { useEffect, useRef, useState } from 'react';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import { GooeyMarquee } from '../shadcn/GooeyMarquee';
+import { AnimatedText } from '../shadcn/AnimatedUnderline';
 
 export default function LamboCanvas() {
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -27,7 +29,7 @@ export default function LamboCanvas() {
   }
 
   return (
-    <div className='w-screen h-screen'>
+    <div className='relative w-screen h-screen'>
       <Canvas
         className='w-full h-full'
         gl={{ logarithmicDepthBuffer: true, antialias: false }}
@@ -152,6 +154,16 @@ export default function LamboCanvas() {
           }}
         />
       </Canvas>
+      <div className='absolute inset-x-0 top-30'>
+        <GooeyMarquee text='Drive the Dream ' />
+        {/* <AnimatedText
+          text='Drive the Dream'
+          textClassName='text-6xl font-bold mb-2'
+          underlinePath='M 0,10 Q 75,0 150,10 Q 225,20 300,10'
+          underlineHoverPath='M 0,10 Q 75,20 150,10 Q 225,0 300,10'
+          underlineDuration={1.5}
+        /> */}
+      </div>
     </div>
   );
 }
