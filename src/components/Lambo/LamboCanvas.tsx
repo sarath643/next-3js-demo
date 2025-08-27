@@ -16,6 +16,49 @@ export default function LamboCanvas() {
 
   const lastX = useRef<number | null>(null);
 
+  const [startY, setStartY] = useState<number | null>(null);
+
+  useEffect(() => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+
+    const domElement = controls.domElement;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      setStartY(touch.clientY);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (startY === null) return;
+      const deltaY = e.touches[0].clientY - startY;
+
+      // if mostly vertical swipe → disable OrbitControls so page scrolls
+      if (Math.abs(deltaY) > 10) {
+        controls.enabled = false;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      controls.enabled = true; // re-enable after swipe ends
+      setStartY(null);
+    };
+
+    if (domElement) {
+      domElement.addEventListener('touchstart', handleTouchStart, { passive: true });
+      domElement.addEventListener('touchmove', handleTouchMove, { passive: true });
+      domElement.addEventListener('touchend', handleTouchEnd, { passive: true });
+    }
+
+    return () => {
+      if (domElement) {
+        domElement.removeEventListener('touchstart', handleTouchStart);
+        domElement.removeEventListener('touchmove', handleTouchMove);
+        domElement.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, [startY]);
+
   function handleMouseMove(e: Event) {
     const mouseEvent = e as MouseEvent;
     if (lastX.current !== null) {
@@ -153,13 +196,9 @@ export default function LamboCanvas() {
               controlsRef.current.autoRotate = true;
             }
           }}
-          touches={{
-            ONE: THREE.TOUCH.ROTATE, // one-finger left/right rotates
-            TWO: THREE.TOUCH.DOLLY_PAN, // two-finger → pinch/zoom/pan (we disabled zoom anyway)
-          }}
         />
       </Canvas>
-      <div className='absolute inset-x-0 top-30 right-1/3'>
+      <div className='absolute inset-x-0 z-10 top-30 right-1/3'>
         {/* <GooeyMarquee text='Drive the Dream ' /> */}
         <AnimatedText
           text='Drive the Dream'

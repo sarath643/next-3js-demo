@@ -45,7 +45,7 @@ export const Overlay: React.FC = () => {
                     restDelta: 0.001,
                     duration: 0.3,
                   }}>
-                  <h1 className='font-extrabold italic text-5xl sm:text-[13rem] leading-20 sm:leading-[10rem] tracking-tight w-1/3 font-sans'>
+                  <h1 className='font-extrabold italic text-5xl sm:text-[13rem] leading-20 sm:leading-[10rem] tracking-tight w-1/3 font-sans text-white'>
                     LET'S DO IT.
                   </h1>
                 </motion.div>
@@ -64,7 +64,7 @@ export const Overlay: React.FC = () => {
                       delay: 0.2,
                       delayChildren: 0.2,
                     }}>
-                    <p className='leading-6 md-0 sm:mb-12'>
+                    <p style={{ color: 'white' }} className='leading-6 text-white md-0 sm:mb-12'>
                       Create your unique and exclusive shirt with our{' '}
                       <strong>brand-new 3D customization tool.</strong>
                     </p>
