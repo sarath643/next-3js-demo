@@ -2,6 +2,7 @@ import LamboCanvas from '@/components/Lambo/LamboCanvas';
 import { HeroGeometric } from '@/components/shadcn/Title';
 import { Overlay } from '@/components/Shirt/Overlay';
 import { ShirtCanvas } from '@/components/Shirt/ShirtCanvas';
+import FullScreenCanvas from '@/components/TestCanvas';
 import Link from 'next/link';
 
 export default function Home() {

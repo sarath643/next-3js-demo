@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, ReactNode, useMemo } from 'react';
+import { useRef, ReactNode, useMemo, useEffect } from 'react';
 import type { JSX } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
@@ -30,8 +30,6 @@ export const ShirtCanvas: React.FC<ShirtCanvasProps> = ({ position = [0, 0, 2.5]
       gl={{ preserveDrawingBuffer: true }}
       style={{ opacity: 0, animation: 'fade-in 1s ease 0.3s forwards' }}>
       <ambientLight intensity={0.5 * Math.PI} />
-      {/* Optional HDRI */}
-      {/* <Environment files='https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/potsdamer_platz_1k.hdr' /> */}
       <CameraRig>
         <Backdrop />
         <Center>
@@ -50,6 +48,7 @@ function Backdrop() {
       easing.dampC(
         (shadows.current.getMesh().material as THREE.MeshStandardMaterial).color,
         new THREE.Color('#ffffff'),
+        0.1,
         0.25,
         delta
       );
@@ -88,26 +87,45 @@ interface CameraRigProps {
   children: ReactNode;
 }
 
-function CameraRig({ children }: CameraRigProps) {
+function CameraRig({ children }: CameraRigProps): JSX.Element {
   const group = useRef<THREE.Group>(null!);
   const snap = useSnapshot(state);
-  const { viewport, pointer } = useThree();
+  const { viewport } = useThree();
+
+  // Store target rotation
+  const targetRotation = useRef({ x: 0, y: 0 });
+
+  // Setup global mouse listener once
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+
+      // normalize to [-1, 1]
+      const normX = (e.clientX / innerWidth) * 2 - 1;
+      const normY = (e.clientY / innerHeight) * 2 - 1;
+
+      // invert mapping so shirt tilts *towards* cursor
+      const tiltStrength = 0.2;
+      targetRotation.current = {
+        x: -normY * tiltStrength,
+        y: normX * tiltStrength,
+      };
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   useFrame((state, delta) => {
-    // Smooth camera movement based on intro state
+    // Smooth camera movement (intro animation)
     easing.damp3(state.camera.position, [snap.intro ? -viewport.width / 4 : 0, 0, 2], 0.25, delta);
 
-    // Smooth group rotation based on mouse position
+    // Apply shirt tilt towards cursor
     if (group.current) {
-      // Use Three.js pointer which is automatically normalized to [-1, 1]
-      const x = pointer.x;
-      const y = pointer.y;
-
-      // Apply rotation with some damping for smooth movement
       easing.dampE(
         group.current.rotation,
-        [y * 0.2, -x * 0.3, 0], // Adjust multipliers for desired sensitivity
-        0.25,
+        [targetRotation.current.x, targetRotation.current.y, 0],
+        0.15,
         delta
       );
     }

@@ -15,7 +15,7 @@ export const Overlay: React.FC = () => {
     triggerOnce: true,
   });
 
-  const transition = { type: 'spring' as const, duration: 0.8, delay: inView ? 2 : 0 };
+  const transition = { type: 'spring' as const, duration: 0.8, delay: inView ? 1 : 0 };
   const transition2 = { type: 'spring' as const, duration: 0.8 };
 
   const config: MotionProps = {
@@ -25,7 +25,12 @@ export const Overlay: React.FC = () => {
   };
 
   return (
-    <div ref={ref} className='absolute inset-0'>
+    <div
+      ref={ref}
+      className='absolute inset-0'
+      style={{
+        pointerEvents: snap.intro ? 'auto' : 'none', // Block events only in intro mode
+      }}>
       {inView && (
         <AnimatePresence>
           {snap.intro ? (
@@ -45,7 +50,7 @@ export const Overlay: React.FC = () => {
                     restDelta: 0.001,
                     duration: 0.3,
                   }}>
-                  <h1 className='font-extrabold italic text-5xl sm:text-[13rem] leading-20 sm:leading-[10rem] tracking-tight w-1/3 font-sans text-white'>
+                  <h1 className='font-extrabold italic text-5xl sm:text-[13rem] leading-14 sm:leading-[10rem] tracking-tight w-1/3 font-sans text-white'>
                     LET'S DO IT.
                   </h1>
                 </motion.div>
@@ -82,7 +87,9 @@ export const Overlay: React.FC = () => {
             <motion.section
               key='custom'
               {...config}
-              className='absolute inset-0 flex items-center justify-center'>
+              className='absolute inset-0 flex items-center justify-center'
+              style={{ pointerEvents: 'none' }} // Make transparent to mouse events
+            >
               <Customizer />
             </motion.section>
           )}
@@ -108,7 +115,9 @@ const Customizer: React.FC = () => {
   };
 
   return (
-    <div className='relative flex flex-col items-center justify-end w-full h-full mb-6'>
+    <div
+      className='relative flex flex-col items-center justify-end w-full h-full mb-6'
+      style={{ pointerEvents: 'auto' }}>
       <div className='flex gap-2.5 mb-5 flex-wrap md:flex-row md:static md:top-auto md:right-auto md:transform-none'>
         {snap.colors.map((color: string) => (
           <div

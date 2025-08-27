@@ -6,7 +6,12 @@ module.exports = {
     './lib/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      height: ({ theme }) => ({
+        ...theme('spacing'),
+        screen: '100dvh',
+      }),
+    },
   },
   variants: {
     extend: {},
