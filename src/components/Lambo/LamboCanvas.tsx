@@ -1,6 +1,6 @@
 'use client';
 
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { Environment, Lightformer, ContactShadows, OrbitControls } from '@react-three/drei';
 import { Lamborghini } from './Lamborghini';
 import { Effects } from './Effects';
@@ -13,9 +13,22 @@ import { AnimatedText } from '../shadcn/AnimatedUnderline';
 export default function LamboCanvas() {
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const [rotateDir, setRotateDir] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
 
   const lastX = useRef<number | null>(null);
-  const { gl, camera } = useThree();
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  // Detect if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   function handleMouseMove(e: Event) {
     const mouseEvent = e as MouseEvent;
@@ -30,26 +43,30 @@ export default function LamboCanvas() {
     lastX.current = mouseEvent.clientX;
   }
 
+  // Handle canvas touch events for mobile - allow page scroll vs 3D interaction
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
-    const canvas = gl?.domElement;
-    if (!canvas) return; // ✅ safety check
+    if (!isMobile) return;
 
-    const handleTouchStart = (e: TouchEvent) => {
-      // your logic
+    const handleCanvasTouch = (e: TouchEvent) => {
+      // Allow OrbitControls for any touch interaction on the canvas
+      // The key is to not prevent default, so page scroll can still work
+      // when the touch goes beyond canvas boundaries or is a quick swipe
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      // your logic
-    };
-
-    canvas.addEventListener('touchstart', handleTouchStart);
-    canvas.addEventListener('touchmove', handleTouchMove);
+    // Set pointer-events style based on device
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.style.touchAction = 'pan-y'; // Allow vertical panning (scroll) while enabling other gestures
+    }
 
     return () => {
-      canvas.removeEventListener('touchstart', handleTouchStart);
-      canvas.removeEventListener('touchmove', handleTouchMove);
+      if (canvas) {
+        canvas.style.touchAction = '';
+      }
     };
-  }, [gl]);
+  }, [isMobile]);
 
   return (
     <div className='relative w-screen h-screen'>
@@ -78,9 +95,7 @@ export default function LamboCanvas() {
           <ringGeometry args={[0.9, 1, 3, 1]} />
           <meshStandardMaterial color='white' roughness={0.75} />
         </mesh>
-        {/* We're building a cube-mapped environment declaratively.
-          Anything you put in here will be filmed (once) by a cubemap-camera
-          and applied to the scenes environment, and optionally background. */}
+
         <Environment resolution={512}>
           {/* Ceiling */}
           <Lightformer
@@ -156,7 +171,8 @@ export default function LamboCanvas() {
           minPolarAngle={Math.PI / 2.2}
           maxPolarAngle={Math.PI / 2.2}
           autoRotate
-          autoRotateSpeed={rotateDir * 0.9} // very slow
+          autoRotateSpeed={rotateDir * 0.9}
+          enabled={true}
           onStart={() => {
             if (controlsRef.current) controlsRef.current.autoRotate = false;
             const domElement = controlsRef.current?.domElement || window;
@@ -168,13 +184,35 @@ export default function LamboCanvas() {
             if (controlsRef.current) controlsRef.current.autoRotate = true;
           }}
           touches={{
-            ONE: THREE.TOUCH.ROTATE, // horizontal → rotate
+            ONE: THREE.TOUCH.ROTATE,
             TWO: THREE.TOUCH.DOLLY_PAN,
           }}
         />
       </Canvas>
+
+      {/* Transparent scroll overlay areas for mobile */}
+      {isMobile && (
+        <>
+          {/* Left scroll area */}
+          <div
+            className='absolute top-0 left-0 z-20 w-1/4 h-full bg-transparent'
+            style={{
+              touchAction: 'pan-y',
+              pointerEvents: 'auto',
+            }}
+          />
+          {/* Right scroll area */}
+          <div
+            className='absolute top-0 right-0 z-20 w-1/4 h-full bg-transparent'
+            style={{
+              touchAction: 'pan-y',
+              pointerEvents: 'auto',
+            }}
+          />
+        </>
+      )}
+
       <div className='absolute inset-x-0 z-10 top-30 right-1/3'>
-        {/* <GooeyMarquee text='Drive the Dream ' /> */}
         <AnimatedText
           text='Drive the Dream'
           textClassName='font-bold'
