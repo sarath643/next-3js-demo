@@ -45,12 +45,12 @@ export const Overlay: React.FC = () => {
                     restDelta: 0.001,
                     duration: 0.3,
                   }}>
-                  <h1 className='font-extrabold italic text-[13rem] leading-[10rem] tracking-tight w-1/3 font-sans'>
+                  <h1 className='font-extrabold italic text-5xl sm:text-[13rem] leading-20 sm:leading-[10rem] tracking-tight w-1/3 font-sans'>
                     LET'S DO IT.
                   </h1>
                 </motion.div>
 
-                <div className='relative -top-1/4 left-[300px] w-[350px] mb-12'>
+                <div className='relative top-1/4 sm:-top-1/4 left-0 sm:left-[300px] w-60 sm:w-[350px] mb-12'>
                   <motion.div
                     key='p'
                     initial={{ y: 100, opacity: 0 }}
@@ -64,15 +64,15 @@ export const Overlay: React.FC = () => {
                       delay: 0.2,
                       delayChildren: 0.2,
                     }}>
-                    <p className='mb-12 leading-6'>
+                    <p className='leading-6 md-0 sm:mb-12'>
                       Create your unique and exclusive shirt with our{' '}
                       <strong>brand-new 3D customization tool.</strong>
                     </p>
                     <button
-                      className='flex items-center gap-4 px-8 py-4 font-bold text-white uppercase transition-all duration-300 bg-orange-600 rounded hover:scale-110'
+                      className='flex items-center gap-4 px-2 py-2 text-xs font-bold text-white uppercase transition-all duration-300 bg-orange-600 rounded sm:text-xl sm:px-8 sm:py-4 hover:scale-110'
                       style={{ background: snap.color }}
                       onClick={() => (state.intro = false)}>
-                      CUSTOMIZE IT <AiOutlineHighlight size='1.3em' />
+                      CUSTOMIZE IT <AiOutlineHighlight size='1em' />
                     </button>
                   </motion.div>
                 </div>
@@ -113,14 +113,14 @@ const Customizer: React.FC = () => {
         {snap.colors.map((color: string) => (
           <div
             key={color}
-            className='transition-transform duration-500 border-2 border-white rounded-full cursor-pointer w-7 h-7 hover:scale-125'
+            className='w-5 h-5 transition-transform duration-500 border-2 border-white rounded-full cursor-pointer sm:w-7 sm:h-7 hover:scale-125'
             style={{ background: color }}
             onClick={() => (state.color = color)}
           />
         ))}
       </div>
 
-      <div className='absolute left-12 bottom-10'>
+      <div className='absolute left-auto bottom-12 sm:left-12 sm:bottom-10'>
         <div className='flex items-center gap-5'>
           {snap.decals.map((decal: string) => (
             <div key={decal} className='cursor-pointer' onClick={() => (state.decal = decal)}>
@@ -135,14 +135,14 @@ const Customizer: React.FC = () => {
       </div>
 
       <button
-        className='absolute flex items-center gap-3 px-6 py-4 font-bold uppercase transition-all duration-300 rounded bottom-10 right-10 hover:scale-110'
+        className='absolute flex items-center gap-3 p-2 text-xs font-bold uppercase transition-all duration-300 rounded sm:text-xl sm:px-6 sm:py-4 bottom-24 right-2 sm:bottom-10 sm:right-10 hover:scale-110'
         style={{ background: snap.color }}
         onClick={handleDownload}>
-        DOWNLOAD <AiFillCamera size='1.3em' />
+        DOWNLOAD <AiFillCamera size='1em' />
       </button>
 
       <button
-        className='absolute flex items-center gap-3 px-6 py-4 font-bold text-white uppercase transition-all duration-300 bg-black rounded top-10 right-10 hover:scale-110'
+        className='absolute flex items-center gap-3 p-2 text-xs font-bold text-white uppercase transition-all duration-300 bg-black rounded sm:text-xl sm:px-6 sm:py-4 top-5 right-5 sm:top-10 sm:right-10 hover:scale-110'
         style={{ background: snap.color }}
         onClick={() => (state.intro = true)}>
         GO BACK <AiOutlineArrowLeft size='1.3em' />

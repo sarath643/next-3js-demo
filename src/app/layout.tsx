@@ -16,11 +16,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className=''>{children}</main>
 
         {/* Footer */}
-        <footer className='py-6 text-gray-300 bg-gray-900'>
+        {/* <footer className='py-6 text-gray-300 bg-gray-900'>
           <div className='container mx-auto text-center'>
             <p>© {new Date().getFullYear()} 3JS Demo Site. Created by Sarath Surendran</p>
           </div>
-        </footer>
+        </footer> */}
       </body>
     </html>
   );
