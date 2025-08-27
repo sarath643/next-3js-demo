@@ -137,23 +137,23 @@ function HeroGeometric({ title1 = 'Elevate Your Digital Vision' }: { title1?: st
         />
       </div>
 
-      <div className='relative z-10 container mx-auto px-4 md:px-6'>
-        <div className='max-w-3xl mx-auto text-center gap-5'>
+      <div className='container relative z-10 px-4 mx-auto md:px-6'>
+        <div className='max-w-3xl gap-5 mx-auto text-center'>
           <motion.div custom={1} variants={fadeUpVariants} initial='hidden' animate='visible'>
-            <text className='text-4xl sm:text-6xl md:text-8xl font-bold mb-6 md:mb-8 tracking-tight'>
-              <span className='bg-clip-text text-transparent bg-gradient-to-r from-red-400 via-yellow-50 to-blue-400'>
+            <p className='mb-6 text-4xl font-bold tracking-tight sm:text-6xl md:text-8xl md:mb-8'>
+              <span className='text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-yellow-50 to-blue-400'>
                 {title1}
               </span>
-            </text>
+            </p>
           </motion.div>
 
           <motion.div
-            className='text-center flex items-center justify-center'
+            className='flex items-center justify-center text-center'
             custom={2}
             variants={fadeUpVariants}
             initial='hidden'
             animate='visible'>
-            <p className='text-base mt-5 sm:text-lg md:text-xl text-white/40 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4'>
+            <p className='max-w-xl px-4 mx-auto mt-5 mb-8 text-base font-light leading-relaxed tracking-wide sm:text-lg md:text-xl text-white/40'>
               Crafting exceptional digital experiences through innovative design and cutting-edge
               technology.
             </p>
