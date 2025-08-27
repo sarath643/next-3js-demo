@@ -42,10 +42,10 @@ const AnimatedText = React.forwardRef<HTMLDivElement, AnimatedTextProps>(
     return (
       <div
         ref={ref}
-        className={cn('flex flex-col items-center justify-center gap-2', props.className)}>
+        className={cn(' flex flex-col items-center justify-center gap-2', props.className)}>
         <div className='relative'>
           <motion.h1
-            className={cn('text-2xl sm:text-6xl font-bold text-center', textClassName)}
+            className={cn('text-2xl sm:text-6xl text-white font-bold text-center', textClassName)}
             initial={{ y: -20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
@@ -58,7 +58,7 @@ const AnimatedText = React.forwardRef<HTMLDivElement, AnimatedTextProps>(
             width='100%'
             height='20'
             viewBox='0 0 300 20'
-            className={cn('absolute -bottom-4 left-0', underlineClassName)}>
+            className={cn('absolute -bottom-4 left-0 text-white', underlineClassName)}>
             <motion.path
               d={underlinePath}
               stroke='currentColor'

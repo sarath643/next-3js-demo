@@ -6,6 +6,7 @@ import { Lamborghini } from './Lamborghini';
 import { Effects } from './Effects';
 import { useEffect, useRef, useState } from 'react';
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import * as THREE from 'three';
 import { GooeyMarquee } from '../shadcn/GooeyMarquee';
 import { AnimatedText } from '../shadcn/AnimatedUnderline';
 
@@ -151,6 +152,10 @@ export default function LamboCanvas() {
             if (controlsRef.current) {
               controlsRef.current.autoRotate = true;
             }
+          }}
+          touches={{
+            ONE: THREE.TOUCH.ROTATE, // one-finger left/right rotates
+            TWO: THREE.TOUCH.DOLLY_PAN, // two-finger → pinch/zoom/pan (we disabled zoom anyway)
           }}
         />
       </Canvas>
