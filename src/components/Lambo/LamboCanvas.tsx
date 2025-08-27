@@ -15,8 +15,7 @@ export default function LamboCanvas() {
   const [rotateDir, setRotateDir] = useState(1);
 
   const lastX = useRef<number | null>(null);
-
-  const [startY, setStartY] = useState<number | null>(null);
+  const [start, setStart] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const controls = controlsRef.current;
@@ -26,22 +25,26 @@ export default function LamboCanvas() {
 
     const handleTouchStart = (e: TouchEvent) => {
       const touch = e.touches[0];
-      setStartY(touch.clientY);
+      setStart({ x: touch.clientX, y: touch.clientY });
+      controls.enabled = true; // enable by default
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (startY === null) return;
-      const deltaY = e.touches[0].clientY - startY;
+      if (!start) return;
+      const dx = e.touches[0].clientX - start.x;
+      const dy = e.touches[0].clientY - start.y;
 
-      // if mostly vertical swipe → disable OrbitControls so page scrolls
-      if (Math.abs(deltaY) > 10) {
-        controls.enabled = false;
+      // if vertical swipe is stronger → let page scroll
+      if (Math.abs(dy) > Math.abs(dx)) {
+        controls.enabled = false; // OrbitControls OFF → page scrolls
+      } else {
+        controls.enabled = true; // OrbitControls ON → rotate
       }
     };
 
     const handleTouchEnd = () => {
-      controls.enabled = true; // re-enable after swipe ends
-      setStartY(null);
+      controls.enabled = true; // reset for next gesture
+      setStart(null);
     };
 
     if (domElement) {
@@ -57,7 +60,7 @@ export default function LamboCanvas() {
         domElement.removeEventListener('touchend', handleTouchEnd);
       }
     };
-  }, [startY]);
+  }, [start]);
 
   function handleMouseMove(e: Event) {
     const mouseEvent = e as MouseEvent;
@@ -195,6 +198,10 @@ export default function LamboCanvas() {
             if (controlsRef.current) {
               controlsRef.current.autoRotate = true;
             }
+          }}
+          touches={{
+            ONE: THREE.TOUCH.ROTATE, // horizontal swipe rotates
+            TWO: THREE.TOUCH.PAN, // disable pinch zoom/pan (set to PAN, or remove to disable)
           }}
         />
       </Canvas>
