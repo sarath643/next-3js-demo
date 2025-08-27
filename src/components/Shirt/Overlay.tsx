@@ -135,7 +135,7 @@ const Customizer: React.FC = () => {
       </div>
 
       <button
-        className='absolute flex items-center gap-3 p-2 text-xs font-bold uppercase transition-all duration-300 rounded sm:text-xl sm:px-6 sm:py-4 bottom-24 right-2 sm:bottom-10 sm:right-10 hover:scale-110'
+        className='absolute flex items-center gap-3 p-2 text-xs font-bold text-white uppercase transition-all duration-300 rounded sm:text-xl sm:px-6 sm:py-4 bottom-24 right-2 sm:bottom-10 sm:right-10 hover:scale-110'
         style={{ background: snap.color }}
         onClick={handleDownload}>
         DOWNLOAD <AiFillCamera size='1em' />

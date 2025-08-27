@@ -1,6 +1,6 @@
 'use client';
 
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { Environment, Lightformer, ContactShadows, OrbitControls } from '@react-three/drei';
 import { Lamborghini } from './Lamborghini';
 import { Effects } from './Effects';
@@ -15,52 +15,7 @@ export default function LamboCanvas() {
   const [rotateDir, setRotateDir] = useState(1);
 
   const lastX = useRef<number | null>(null);
-  const [start, setStart] = useState<{ x: number; y: number } | null>(null);
-
-  useEffect(() => {
-    const controls = controlsRef.current;
-    if (!controls) return;
-
-    const domElement = controls.domElement;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      setStart({ x: touch.clientX, y: touch.clientY });
-      controls.enabled = true; // enable by default
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!start) return;
-      const dx = e.touches[0].clientX - start.x;
-      const dy = e.touches[0].clientY - start.y;
-
-      // if vertical swipe is stronger → let page scroll
-      if (Math.abs(dy) > Math.abs(dx)) {
-        controls.enabled = false; // OrbitControls OFF → page scrolls
-      } else {
-        controls.enabled = true; // OrbitControls ON → rotate
-      }
-    };
-
-    const handleTouchEnd = () => {
-      controls.enabled = true; // reset for next gesture
-      setStart(null);
-    };
-
-    if (domElement) {
-      domElement.addEventListener('touchstart', handleTouchStart, { passive: true });
-      domElement.addEventListener('touchmove', handleTouchMove, { passive: true });
-      domElement.addEventListener('touchend', handleTouchEnd, { passive: true });
-    }
-
-    return () => {
-      if (domElement) {
-        domElement.removeEventListener('touchstart', handleTouchStart);
-        domElement.removeEventListener('touchmove', handleTouchMove);
-        domElement.removeEventListener('touchend', handleTouchEnd);
-      }
-    };
-  }, [start]);
+  const { gl, camera } = useThree();
 
   function handleMouseMove(e: Event) {
     const mouseEvent = e as MouseEvent;
@@ -74,6 +29,27 @@ export default function LamboCanvas() {
     }
     lastX.current = mouseEvent.clientX;
   }
+
+  useEffect(() => {
+    const canvas = gl?.domElement;
+    if (!canvas) return; // ✅ safety check
+
+    const handleTouchStart = (e: TouchEvent) => {
+      // your logic
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      // your logic
+    };
+
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
+
+    return () => {
+      canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, [gl]);
 
   return (
     <div className='relative w-screen h-screen'>
@@ -181,27 +157,19 @@ export default function LamboCanvas() {
           maxPolarAngle={Math.PI / 2.2}
           autoRotate
           autoRotateSpeed={rotateDir * 0.9} // very slow
-          onStart={(event) => {
-            if (controlsRef.current) {
-              controlsRef.current.autoRotate = false;
-            }
-
-            // start tracking mouse
+          onStart={() => {
+            if (controlsRef.current) controlsRef.current.autoRotate = false;
             const domElement = controlsRef.current?.domElement || window;
             domElement.addEventListener('mousemove', handleMouseMove);
           }}
           onEnd={() => {
-            // stop tracking mouse
             const domElement = controlsRef.current?.domElement || window;
             domElement.removeEventListener('mousemove', handleMouseMove);
-
-            if (controlsRef.current) {
-              controlsRef.current.autoRotate = true;
-            }
+            if (controlsRef.current) controlsRef.current.autoRotate = true;
           }}
           touches={{
-            ONE: THREE.TOUCH.ROTATE, // horizontal swipe rotates
-            TWO: THREE.TOUCH.PAN, // disable pinch zoom/pan (set to PAN, or remove to disable)
+            ONE: THREE.TOUCH.ROTATE, // horizontal → rotate
+            TWO: THREE.TOUCH.DOLLY_PAN,
           }}
         />
       </Canvas>
