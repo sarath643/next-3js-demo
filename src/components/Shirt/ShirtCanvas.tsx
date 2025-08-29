@@ -48,8 +48,7 @@ function Backdrop() {
       easing.dampC(
         (shadows.current.getMesh().material as THREE.MeshStandardMaterial).color,
         new THREE.Color('#ffffff'),
-        0.1,
-        0.25,
+        0.5,
         delta
       );
     }
